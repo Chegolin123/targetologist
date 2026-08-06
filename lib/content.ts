@@ -8,7 +8,7 @@ export const profile = {
   role: "Таргетолог",
   platforms: "Яндекс.Директ · VK Реклама",
   tagline: "Лиды из рекламы. Без слива бюджета.",
-  email: "chegolin@yandex.ru",
+  email: "chegol45@yandex.ru",
   telegram: "@NoWayWhile",
   phone: "+7 993 200-65-51",
   github: "Chegolin123",

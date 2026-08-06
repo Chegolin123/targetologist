@@ -24,6 +24,7 @@ const monoFont = JetBrains_Mono({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://chegolin.ru";
+const BASE_PATH = process.env.NODE_ENV === "production" ? "/targetologist" : "";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,7 +36,8 @@ export const metadata: Metadata = {
     "Настройка и ведение рекламы в Яндекс.Директ и VK Рекламе. Лиды без слива бюджета. Data-driven подход, AI-инструменты, прозрачная отчётность.",
   authors: [{ name: "Алексей Чеголин" }],
   creator: "Алексей Чеголин",
-  alternates: { canonical: "/" },
+  manifest: `${BASE_PATH}/manifest.webmanifest`,
+  alternates: { canonical: `${BASE_PATH}/` },
   openGraph: {
     title: "Алексей Чеголин — Таргетолог",
     description: "Лиды из рекламы в Яндекс.Директ и VK Рекламе. Без слива бюджета.",
