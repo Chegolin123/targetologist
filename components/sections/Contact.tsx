@@ -22,14 +22,35 @@ export function ContactSection() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
     if (!validate()) return;
     setStatus("submitting");
-    const subject = encodeURIComponent(`Заказ — ${form.name}`);
-    const body = encodeURIComponent(`Имя: ${form.name}\nКонтакт: ${form.contact}\n\n${form.message}`);
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setTimeout(() => { setStatus("success"); setForm({ name: "", contact: "", message: "" }); }, 800);
+
+    // 1) Try Telegram bot (CORS allowed by Telegram API)
+    try {
+      const msg = `🎯 НОВАЯ ЗАЯВКА С САЙТА\n━━━━━━━━━━━━━━\n👤 Имя: ${form.name}\n📱 Контакт: ${form.contact}\n📝 Сообщение: ${form.message}`;
+      const resp = await fetch(`https://api.telegram.org/bot${process.env.NEXT_PUBLIC_TG_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: process.env.NEXT_PUBLIC_TG_CHAT_ID,
+          text: msg,
+        }),
+      });
+      const data = await resp.json();
+      if (!data.ok) throw new Error("Telegram send failed");
+      setStatus("success");
+      setForm({ name: "", contact: "", message: "" });
+      return;
+    } catch {
+      // 2) Fallback: mailto
+      const subject = encodeURIComponent(`Заказ — ${form.name}`);
+      const body = encodeURIComponent(`Имя: ${form.name}\nКонтакт: ${form.contact}\n\n${form.message}`);
+      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+      setStatus("success");
+      setForm({ name: "", contact: "", message: "" });
+    }
   };
 
   return (
