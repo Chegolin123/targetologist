@@ -7,91 +7,60 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { faq } from "@/lib/content";
 
 export function FaqSection() {
-  const [openId, setOpenId] = useState<string | null>(faq[0]?.id ?? null);
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section id="faq" className="section">
       <div className="container-px">
         <Reveal>
-          <span className="section-eyebrow">Частые вопросы</span>
-          <h2 className="section-title mt-2">FAQ</h2>
-          <p className="section-subtitle">
-            Отвечаю честно, без маркетингового тумана.
-          </p>
+          <span className="eyebrow">FAQ</span>
+          <h2 className="display mt-3" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}>
+            Частые вопросы
+          </h2>
         </Reveal>
 
-        <RevealGroup staggerDelay={0.06}>
-          <div className="max-w-3xl mt-12 space-y-3">
-            {faq.map((item) => {
-              const isOpen = openId === item.id;
-              return (
-                <RevealItem key={item.id}>
-                  <FaqItem
-                    item={item}
-                    isOpen={isOpen}
-                    onToggle={() => setOpenId(isOpen ? null : item.id)}
-                  />
-                </RevealItem>
-              );
-            })}
-          </div>
+        <RevealGroup className="mt-14 max-w-3xl">
+          {faq.map((item, i) => (
+            <RevealItem key={i}>
+              <div className="border-t border-white/[0.06] last:border-b">
+                <button
+                  onClick={() => setOpen(open === i ? null : i)}
+                  className="w-full flex items-center justify-between gap-4 py-6 text-left group"
+                  aria-expanded={open === i}
+                >
+                  <span className="font-display text-lg sm:text-xl text-chalk group-hover:text-lime transition-colors">
+                    {item.q}
+                  </span>
+                  <motion.span
+                    animate={{ rotate: open === i ? 45 : 0 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex-shrink-0 text-lime"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M10 4v12M4 10h12" strokeLinecap="round" />
+                    </svg>
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {open === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pb-6 text-mist-light leading-relaxed max-w-prose">
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </RevealItem>
+          ))}
         </RevealGroup>
       </div>
     </section>
-  );
-}
-
-function FaqItem({
-  item,
-  isOpen,
-  onToggle,
-}: {
-  item: typeof faq[number];
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border transition-colors duration-300",
-        isOpen
-          ? "border-amber/30 bg-white shadow-card"
-          : "border-black/5 bg-white hover:border-amber/20"
-      )}
-    >
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 text-left"
-        aria-expanded={isOpen}
-      >
-        <span className="font-medium text-charcoal text-pretty">
-          {item.question}
-        </span>
-        <motion.span
-          animate={{ rotate: isOpen ? 45 : 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-amber"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M8 3v10M3 8h10" />
-          </svg>
-        </motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="px-5 sm:px-6 pb-5 sm:pb-6 text-charcoal-500 text-pretty leading-relaxed">
-              {item.answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
   );
 }

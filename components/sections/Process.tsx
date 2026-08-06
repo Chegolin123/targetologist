@@ -5,53 +5,34 @@ import { processSteps } from "@/lib/content";
 
 export function ProcessSection() {
   return (
-    <section id="process" className="section bg-surface-muted">
+    <section id="process" className="section">
       <div className="container-px">
         <Reveal>
-          <span className="section-eyebrow">Как мы работаем</span>
-          <h2 className="section-title mt-2">Процесс</h2>
-          <p className="section-subtitle">
-            Прозрачно, по этапам. Вы всегда знаете, что происходит и зачем.
-          </p>
+          <span className="eyebrow">Процесс</span>
+          <h2 className="display mt-3" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}>
+            Как мы работаем
+          </h2>
         </Reveal>
 
-        <RevealGroup staggerDelay={0.1}>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
-            {processSteps.map((step, i) => (
-              <RevealItem key={step.id}>
-                <div className="relative h-full">
-                  {/* Connector line (desktop only, not on last) */}
-                  {i < processSteps.length - 1 && (
-                    <div
-                      className="hidden lg:block absolute top-7 left-full w-full h-px"
-                      style={{
-                        background:
-                          "linear-gradient(to right, rgba(200,120,44,0.2), transparent)",
-                      }}
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  {/* Step number */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="flex-shrink-0 w-9 h-9 rounded-full bg-amber text-white flex items-center justify-center font-mono font-bold text-sm">
-                      {i + 1}
-                    </span>
-                    <span className="text-xs font-mono text-charcoal-400 uppercase tracking-wider">
-                      {step.duration}
-                    </span>
-                  </div>
-
-                  <h3 className="text-lg font-display font-semibold text-charcoal mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-charcoal-500 leading-relaxed text-pretty">
-                    {step.description}
-                  </p>
+        <RevealGroup className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06]">
+          {processSteps.map((step) => (
+            <RevealItem key={step.num}>
+              <div className="bg-ink p-6 sm:p-8 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="font-mono text-3xl font-bold text-lime/30">{step.num}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wide2 text-mist border border-white/10 rounded-full px-2 py-1">
+                    {step.duration}
+                  </span>
                 </div>
-              </RevealItem>
-            ))}
-          </div>
+                <h3 className="font-display text-lg font-semibold text-chalk mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-mist-light leading-relaxed flex-1">
+                  {step.desc}
+                </p>
+              </div>
+            </RevealItem>
+          ))}
         </RevealGroup>
       </div>
     </section>

@@ -3,59 +3,23 @@
 import { type ReactNode } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 
-type Direction = "up" | "down" | "left" | "right" | "none";
-
-const directionOffsets: Record<Direction, { x?: number; y?: number }> = {
-  up: { y: 24 },
-  down: { y: -24 },
-  left: { x: 24 },
-  right: { x: -24 },
-  none: {},
-};
-
 interface RevealProps {
   children: ReactNode;
-  direction?: Direction;
   className?: string;
   delay?: number;
   duration?: number;
-  blur?: boolean;
-  once?: boolean;
+  y?: number;
 }
 
-export function Reveal({
-  children,
-  direction = "up",
-  className,
-  delay = 0,
-  duration = 0.6,
-  blur = true,
-  once = true,
-}: RevealProps) {
+export function Reveal({ children, className, delay = 0, duration = 0.7, y = 30 }: RevealProps) {
   const reducedMotion = useReducedMotion();
-
-  if (reducedMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
-  const offset = directionOffsets[direction];
+  if (reducedMotion) return <div className={className}>{children}</div>;
 
   const variants: Variants = {
-    hidden: {
-      opacity: 0,
-      ...offset,
-      filter: blur ? "blur(8px)" : "none",
-    },
+    hidden: { opacity: 0, y, filter: "blur(8px)" },
     visible: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      filter: "blur(0px)",
-      transition: {
-        duration,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-      },
+      opacity: 1, y: 0, filter: "blur(0px)",
+      transition: { duration, delay, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -63,7 +27,7 @@ export function Reveal({
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: "-80px" }}
+      viewport={{ once: true, margin: "-60px" }}
       variants={variants}
       className={className}
     >
@@ -72,36 +36,16 @@ export function Reveal({
   );
 }
 
-// ── RevealGroup & RevealItem ───────────────────────────────────
-
-interface RevealGroupProps {
-  children: ReactNode;
-  className?: string;
-  staggerDelay?: number;
-  once?: boolean;
-}
-
-export function RevealGroup({
-  children,
-  className,
-  staggerDelay = 0.06,
-  once = true,
-}: RevealGroupProps) {
+export function RevealGroup({ children, className, stagger = 0.08 }: { children: ReactNode; className?: string; stagger?: number }) {
   const reducedMotion = useReducedMotion();
-
-  if (reducedMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  if (reducedMotion) return <div className={className}>{children}</div>;
 
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: "-80px" }}
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren: staggerDelay, delayChildren: 0.1 } },
-      }}
+      viewport={{ once: true, margin: "-60px" }}
+      variants={{ hidden: {}, visible: { transition: { staggerChildren: stagger } } }}
       className={className}
     >
       {children}
@@ -109,28 +53,15 @@ export function RevealGroup({
   );
 }
 
-interface RevealItemProps {
-  children: ReactNode;
-  className?: string;
-}
-
-export function RevealItem({ children, className }: RevealItemProps) {
+export function RevealItem({ children, className, y = 24 }: { children: ReactNode; className?: string; y?: number }) {
   const reducedMotion = useReducedMotion();
-
-  if (reducedMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  if (reducedMotion) return <div className={className}>{children}</div>;
 
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
-        visible: {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-        },
+        hidden: { opacity: 0, y, filter: "blur(6px)" },
+        visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
       }}
       className={className}
     >

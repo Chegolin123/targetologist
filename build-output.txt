@@ -4,30 +4,26 @@
  ✓ Compiled successfully
    Linting and checking validity of types ...
    Collecting page data ...
- ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/9) ...
-   Generating static pages (2/9) 
-   Generating static pages (4/9) 
-   Generating static pages (6/9) 
- ✓ Generating static pages (9/9)
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                              Size     First Load JS
-┌ ○ /                                    71.3 kB         167 kB
-├ ○ /_not-found                          142 B          87.5 kB
+┌ ○ /                                    61.4 kB         157 kB
+├ ○ /_not-found                          138 B          87.3 kB
 ├ ○ /icon.svg                            0 B                0 B
 ├ ○ /manifest.webmanifest                0 B                0 B
-├ ƒ /opengraph-image                     0 B                0 B
-├ ○ /privacy                             142 B          87.5 kB
 ├ ○ /robots.txt                          0 B                0 B
 └ ○ /sitemap.xml                         0 B                0 B
-+ First Load JS shared by all            87.4 kB
-  ├ chunks/117-d3018768cb3d4ea1.js       31.7 kB
-  ├ chunks/fd9d1056-8ef33f5ef9456d1f.js  53.6 kB
-  └ other shared chunks (total)          2.06 kB
++ First Load JS shared by all            87.2 kB
+  ├ chunks/117-d0c323cf33f3f948.js       31.7 kB
+  ├ chunks/fd9d1056-b11b2651f33aae7f.js  53.6 kB
+  └ other shared chunks (total)          1.86 kB
 
 
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
+○  (Static)  prerendered as static content
 

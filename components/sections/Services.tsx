@@ -1,92 +1,63 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
-import { services, platforms, type Service } from "@/lib/content";
+import { services } from "@/lib/content";
 
 export function ServicesSection() {
   return (
     <section id="services" className="section">
       <div className="container-px">
-        {/* Section header */}
         <Reveal>
-          <span className="section-eyebrow">Что я делаю</span>
-          <h2 className="section-title mt-2">Услуги</h2>
-          <p className="section-subtitle">
-            Полный цикл: от аудита до масштабирования. Работаю с двумя платформами.
-          </p>
+          <span className="eyebrow">Услуги</span>
+          <h2 className="display mt-3" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}>
+            Что я делаю
+          </h2>
         </Reveal>
 
-        {/* Platform badges */}
-        <Reveal delay={0.1}>
-          <div className="flex flex-wrap gap-3 mt-8 mb-14">
-            {platforms.items.map((p) => (
-              <span
-                key={p.name}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/5 bg-white text-sm font-medium text-charcoal-500"
-              >
-                <span className="w-2 h-2 rounded-full bg-amber" />
-                {p.name}
-              </span>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* Asymmetrical Bento Grid */}
-        <RevealGroup staggerDelay={0.08}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {services.map((service) => (
-              <RevealItem key={service.id}>
-                <ServiceCard service={service} />
-              </RevealItem>
-            ))}
-          </div>
+        <RevealGroup className="mt-16 space-y-px">
+          {services.map((s) => (
+            <RevealItem key={s.id}>
+              <ServiceRow service={s} />
+            </RevealItem>
+          ))}
         </RevealGroup>
       </div>
     </section>
   );
 }
 
-function ServiceCard({ service }: { service: Service }) {
-  const isLarge = service.size === "large";
-  const accentClass = service.accent === "amber" ? "text-amber" : "text-sage";
-  const accentBgClass = service.accent === "amber" ? "bg-amber/5" : "bg-sage/5";
-  const accentDotClass = service.accent === "amber" ? "bg-amber" : "bg-sage";
-
+function ServiceRow({ service }: { service: typeof services[number] }) {
   return (
-    <div
-      className={cn(
-        "double-bezel group h-full",
-        isLarge && "lg:col-span-2"
-      )}
-    >
-      <div className="double-bezel-inner flex flex-col">
-        {/* Accent line */}
-        <div className={cn("w-8 h-0.5 rounded-full mb-4", accentDotClass)} />
+    <div className="group grid grid-cols-12 gap-4 sm:gap-6 py-8 sm:py-10 border-t border-white/[0.06] transition-colors duration-300 hover:bg-white/[0.015]">
+      {/* Number */}
+      <div className="col-span-2 sm:col-span-1">
+        <span className="font-mono text-sm text-mist group-hover:text-lime transition-colors">
+          {service.num}
+        </span>
+      </div>
 
-        <h3 className="text-xl sm:text-2xl font-display font-semibold text-charcoal mb-3">
+      {/* Title */}
+      <div className="col-span-10 sm:col-span-4">
+        <h3 className="font-display text-xl sm:text-2xl font-semibold text-chalk group-hover:text-lime transition-colors duration-300">
           {service.title}
         </h3>
+      </div>
 
-        <p className="text-charcoal-500 mb-5 text-pretty">{service.description}</p>
+      {/* Description */}
+      <div className="col-span-12 sm:col-span-4">
+        <p className="text-mist-light text-sm sm:text-base leading-relaxed">{service.desc}</p>
+      </div>
 
-        {/* Feature list */}
-        <ul className="space-y-2 mt-auto">
-          {service.features.map((f, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-sm text-charcoal-500">
-              <span className={cn("mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0", accentDotClass)} />
-              {f}
+      {/* Points */}
+      <div className="col-span-12 sm:col-span-3">
+        <ul className="space-y-1">
+          {service.points.map((p, i) => (
+            <li key={i} className="flex items-center gap-2 font-mono text-xs text-mist">
+              <span className="w-1 h-1 rounded-full bg-lime/50" />
+              {p}
             </li>
           ))}
         </ul>
-
-        {/* Subtle hover glow */}
-        <div
-          className={cn(
-            "absolute inset-0 rounded-[1.75rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none",
-            accentBgClass
-          )}
-        />
       </div>
     </div>
   );
