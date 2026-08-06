@@ -27,19 +27,22 @@ export function ContactSection() {
     if (!validate()) return;
     setStatus("submitting");
 
-    // 1) Try Telegram bot (CORS allowed by Telegram API)
+    // 1) Send via VPS proxy → Telegram (VPS has access to api.telegram.org,
+    //    which is blocked from RU networks). Requires TLS domain — fallback
+    //    to mailto until then.
     try {
-      const msg = `🎯 НОВАЯ ЗАЯВКА С САЙТА\n━━━━━━━━━━━━━━\n👤 Имя: ${form.name}\n📱 Контакт: ${form.contact}\n📝 Сообщение: ${form.message}`;
-      const resp = await fetch(`https://api.telegram.org/bot${process.env.NEXT_PUBLIC_TG_BOT_TOKEN}/sendMessage`, {
+      const resp = await fetch("http://144.31.207.192:8888/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          chat_id: process.env.NEXT_PUBLIC_TG_CHAT_ID,
-          text: msg,
+          secret: "LEAD_PROXY_SECRET_FROM_ENV",
+          name: form.name,
+          contact: form.contact,
+          message: form.message,
         }),
       });
       const data = await resp.json();
-      if (!data.ok) throw new Error("Telegram send failed");
+      if (!data.ok) throw new Error("Proxy send failed");
       setStatus("success");
       setForm({ name: "", contact: "", message: "" });
       return;
