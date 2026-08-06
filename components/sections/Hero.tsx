@@ -18,14 +18,14 @@ export function Hero() {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-dvh flex items-center overflow-hidden pt-24 sm:pt-28 lg:pt-0">
       {/* 3D background — behind content */}
       <div className="absolute inset-0 z-0">
         <HeroScene />
       </div>
 
-      <div className="container-px relative z-10 w-full py-20 sm:py-0">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-screen">
+      <div className="container-px relative z-10 w-full pb-16 sm:pb-0">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100dvh-7rem)]">
           {/* Text column */}
           <div className="flex flex-col justify-center pt-16 lg:pt-0">
             <Reveal blur={true} duration={0.8}>
@@ -35,7 +35,10 @@ export function Hero() {
             </Reveal>
 
             <Reveal blur={true} duration={0.8} delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-bold tracking-tight text-charcoal leading-[1.05]">
+              <h1
+                className="font-display font-bold tracking-tight text-charcoal leading-[1.05]"
+                style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
+              >
                 {hero.title}
               </h1>
             </Reveal>

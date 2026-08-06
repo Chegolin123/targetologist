@@ -1,10 +1,106 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { Reveal } from "@/components/ui/Reveal";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { contact, profile } from "@/lib/content";
+import { cn } from "@/lib/utils";
+
+type Status = "idle" | "submitting" | "success" | "error";
+
+interface FormState {
+  name: string;
+  email: string;
+  message: string;
+}
+
+interface Errors {
+  name?: string;
+  email?: string;
+  message?: string;
+}
 
 export function ContactSection() {
+  const [status, setStatus] = useState<Status>("idle");
+  const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
+  const [errors, setErrors] = useState<Errors>({});
+  const firstInvalidRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+
+  const validate = (field: keyof FormState, value: string): string | undefined => {
+    if (field === "name") {
+      if (!value.trim()) return "Укажите, как к вам обращаться";
+      if (value.trim().length < 2) return "Слишком короткое имя";
+    }
+    if (field === "email") {
+      if (!value.trim()) return "Укажите email или Telegram";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && !value.startsWith("@")) {
+        return "Неверный формат. Пример: name@mail.ru или @telegram";
+      }
+    }
+    if (field === "message") {
+      if (!value.trim()) return "Опишите кратко ваш бизнес и цели";
+      if (value.trim().length < 10) return "Слишком коротко — добавьте деталей";
+    }
+    return undefined;
+  };
+
+  const handleChange = (field: keyof FormState, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    // Clear error on edit
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const handleBlur = (field: keyof FormState) => {
+    const error = validate(field, form[field]);
+    setErrors((prev) => ({ ...prev, [field]: error }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate all fields
+    const newErrors: Errors = {
+      name: validate("name", form.name),
+      email: validate("email", form.email),
+      message: validate("message", form.message),
+    };
+    setErrors(newErrors);
+
+    // Focus first invalid field
+    if (newErrors.name) {
+      firstInvalidRef.current = document.getElementById("contact-name") as HTMLInputElement;
+    } else if (newErrors.email) {
+      firstInvalidRef.current = document.getElementById("contact-email") as HTMLInputElement;
+    } else if (newErrors.message) {
+      firstInvalidRef.current = document.getElementById("contact-message") as HTMLTextAreaElement;
+    }
+    if (firstInvalidRef.current) {
+      firstInvalidRef.current.focus();
+      return;
+    }
+
+    setStatus("submitting");
+
+    try {
+      // mailto fallback — opens default mail client with pre-filled body
+      const subject = encodeURIComponent(`Заказ с сайта — ${form.name}`);
+      const body = encodeURIComponent(
+        `Имя: ${form.name}\nКонтакт: ${form.email}\n\n${form.message}`
+      );
+      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+
+      // Simulate success after redirect attempt
+      setTimeout(() => {
+        setStatus("success");
+        setForm({ name: "", email: "", message: "" });
+      }, 800);
+    } catch {
+      setStatus("error");
+    }
+  };
+
   return (
     <section id="contact" className="section">
       <div className="container-px">
@@ -23,7 +119,7 @@ export function ContactSection() {
                   На связи
                 </h3>
 
-                <div className="space-y-5">
+                <div className="space-y-3">
                   {/* Telegram */}
                   <a
                     href={`https://t.me/${profile.telegram.replace("@", "")}`}
@@ -92,30 +188,189 @@ export function ContactSection() {
             </div>
           </Reveal>
 
-          {/* CTA block */}
+          {/* Contact form */}
           <Reveal delay={0.2} direction="left">
-            <div className="flex flex-col justify-center h-full">
-              <p className="text-lg text-charcoal-500 mb-8 text-pretty">
-                Расскажите о вашем бизнесе и целях — я подготовлю конкретное предложение
-                с прогнозом лидов и бюджетом.
-              </p>
-
-              <Magnetic>
-                <a
-                  href={`https://t.me/${profile.telegram.replace("@", "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary text-lg px-8 py-4 w-fit group"
-                >
-                  {contact.cta}
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20 group-hover:translate-x-1 group-hover:-translate-y-px transition-transform duration-300">
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                      <path d="M1 7.5h13M9 2.5l5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            {status === "success" ? (
+              <div
+                role="status"
+                aria-live="polite"
+                className="double-bezel h-full"
+              >
+                <div className="double-bezel-inner flex flex-col items-center justify-center text-center py-16">
+                  <div className="w-14 h-14 rounded-full bg-sage text-white flex items-center justify-center mb-5">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6 9 17l-5-5" />
                     </svg>
-                  </span>
-                </a>
-              </Magnetic>
-            </div>
+                  </div>
+                  <h3 className="text-xl font-display font-semibold text-charcoal mb-2">
+                    Заявка отправлена
+                  </h3>
+                  <p className="text-charcoal-500 max-w-xs">
+                    Я свяжусь с вами в ближайшее время. Проверьте почту или Telegram.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                {/* Name */}
+                <div>
+                  <label
+                    htmlFor="contact-name"
+                    className="block text-sm font-medium text-charcoal mb-2"
+                  >
+                    Как вас зовут <span className="text-amber" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    value={form.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    onBlur={() => handleBlur("name")}
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? "name-error" : undefined}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-xl border bg-white text-charcoal",
+                      "transition-colors duration-200 outline-none",
+                      "focus:border-amber focus:ring-2 focus:ring-amber/20",
+                      errors.name ? "border-red-400" : "border-black/10"
+                    )}
+                    placeholder="Иван"
+                  />
+                  {errors.name && (
+                    <p
+                      id="name-error"
+                      role="alert"
+                      className="mt-1.5 text-sm text-red-500"
+                    >
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+
+                {/* Email / Telegram */}
+                <div>
+                  <label
+                    htmlFor="contact-email"
+                    className="block text-sm font-medium text-charcoal mb-2"
+                  >
+                    Email или Telegram <span className="text-amber" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="contact-email"
+                    type="text"
+                    autoComplete="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
+                    onBlur={() => handleBlur("email")}
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-xl border bg-white text-charcoal",
+                      "transition-colors duration-200 outline-none",
+                      "focus:border-amber focus:ring-2 focus:ring-amber/20",
+                      errors.email ? "border-red-400" : "border-black/10"
+                    )}
+                    placeholder="name@mail.ru или @username"
+                  />
+                  {errors.email && (
+                    <p
+                      id="email-error"
+                      role="alert"
+                      className="mt-1.5 text-sm text-red-500"
+                    >
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label
+                    htmlFor="contact-message"
+                    className="block text-sm font-medium text-charcoal mb-2"
+                  >
+                    {contact.messageLabel} <span className="text-amber" aria-hidden="true">*</span>
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    rows={4}
+                    required
+                    value={form.message}
+                    onChange={(e) => handleChange("message", e.target.value)}
+                    onBlur={() => handleBlur("message")}
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? "message-error" : undefined}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-xl border bg-white text-charcoal resize-none",
+                      "transition-colors duration-200 outline-none",
+                      "focus:border-amber focus:ring-2 focus:ring-amber/20",
+                      errors.message ? "border-red-400" : "border-black/10"
+                    )}
+                    placeholder="Например: клининговая компания в Москве, нужен Директ на поиск, бюджет 30к/мес"
+                  />
+                  {errors.message && (
+                    <p
+                      id="message-error"
+                      role="alert"
+                      className="mt-1.5 text-sm text-red-500"
+                    >
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Error banner */}
+                {status === "error" && (
+                  <div
+                    role="alert"
+                    className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm"
+                  >
+                    Не удалось отправить. Напишите напрямую в Telegram —{" "}
+                    <a
+                      href={`https://t.me/${profile.telegram.replace("@", "")}`}
+                      className="underline font-medium"
+                    >
+                      {profile.telegram}
+                    </a>
+                  </div>
+                )}
+
+                {/* Submit */}
+                <Magnetic>
+                  <button
+                    type="submit"
+                    disabled={status === "submitting"}
+                    className="btn-primary text-base px-8 py-4 w-full sm:w-auto group disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {status === "submitting" ? (
+                      <>
+                        <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" opacity="0.25" />
+                          <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                        </svg>
+                        Отправляю…
+                      </>
+                    ) : (
+                      <>
+                        {contact.submitLabel}
+                        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 group-hover:translate-x-0.5 group-hover:-translate-y-px transition-transform duration-300">
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </Magnetic>
+
+                <p className="text-xs text-charcoal-400">
+                  Нажимая кнопку, вы соглашаетесь с обработкой персональных данных.
+                </p>
+              </form>
+            )}
           </Reveal>
         </div>
       </div>
