@@ -1,0 +1,264 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design Tokens ─────────────────────────────────────────────────── */
+:root {
+  --color-amber: #C8782C;
+  --color-amber-dark: #A56122;
+  --color-amber-light: #E09C3E;
+  --color-charcoal: #1A1B1E;
+  --color-charcoal-dark: #1E1F22;
+  --color-sage: #2D5A4B;
+  --color-surface: #FCFAF7;
+  --color-surface-card: #FFFFFF;
+  --color-hairline: #E8E4DC;
+
+  /* Easing */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-expo: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+
+  /* Durations */
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
+  --duration-reveal: 600ms;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+    font-feature-settings: "kern", "liga", "calt";
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(200, 120, 44, 0.7);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: rgba(200, 120, 44, 0.2);
+    color: var(--color-charcoal);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ── Component Classes ─────────────────────────────────────────────── */
+@layer components {
+  /* Container */
+  .container-px {
+    @apply max-w-6xl mx-auto px-5 sm:px-8 lg:px-10;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-20 sm:py-28 lg:py-36;
+  }
+
+  /* Section typography */
+  .section-eyebrow {
+    @apply font-mono text-xs tracking-[0.2em] uppercase;
+    color: var(--color-amber);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-display font-semibold tracking-tight;
+    color: var(--color-charcoal);
+    margin-top: 0.5rem;
+  }
+
+  .section-subtitle {
+    @apply mt-4 text-lg max-w-2xl;
+    color: #5C5A55;
+  }
+
+  /* Card (regular) */
+  .card {
+    background-color: var(--color-surface-card);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(232, 228, 220, 0.6);
+    box-shadow: 0 1px 3px rgba(26, 27, 30, 0.04), 0 1px 2px rgba(26, 27, 30, 0.03);
+  }
+
+  .card-hover {
+    transition: all 300ms var(--ease-out-expo);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(26, 27, 30, 0.06);
+      border-color: rgba(200, 120, 44, 0.2);
+    }
+  }
+
+  /* Primary button */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-amber);
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px rgba(200, 120, 44, 0.22);
+    transition: all 300ms var(--ease-out-expo);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover {
+      background-color: var(--color-amber-dark);
+      box-shadow: 0 4px 16px rgba(200, 120, 44, 0.30);
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(26, 27, 30, 0.12);
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+    font-weight: 600;
+    border-radius: 9999px;
+    transition: all 300ms var(--ease-out-expo);
+  }
+
+  .btn-ghost:active {
+    transform: scale(0.98);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-ghost:hover {
+      border-color: var(--color-amber);
+      color: var(--color-amber);
+      background-color: rgba(200, 120, 44, 0.04);
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(135deg, var(--color-amber), var(--color-amber-light));
+  }
+
+  /* Double bezel card */
+  .double-bezel {
+    position: relative;
+    border-radius: 1.75rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(200, 120, 44, 0.15), rgba(26, 27, 30, 0.05));
+  }
+
+  .double-bezel-inner {
+    background-color: var(--color-surface-card);
+    border-radius: calc(1.75rem - 1px);
+    padding: 1.5rem 2rem;
+    height: 100%;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+
+  @media (min-width: 640px) {
+    .double-bezel-inner {
+      padding: 2rem;
+    }
+  }
+
+  /* Nav glass */
+  .nav-glass {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(232, 228, 220, 0.6);
+    box-shadow: 0 1px 3px rgba(26, 27, 30, 0.04);
+  }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────── */
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* ── Reduced Motion ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Print ─────────────────────────────────────────────────────────── */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .btn-primary,
+  .btn-ghost,
+  [role="navigation"] {
+    display: none;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+}
