@@ -10,7 +10,7 @@ export function ProcessSection() {
         <Reveal>
           <span className="eyebrow">Процесс</span>
           <h2 className="display mt-3" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}>
-            Как мы работаем
+            Как я работаю
           </h2>
         </Reveal>
 
