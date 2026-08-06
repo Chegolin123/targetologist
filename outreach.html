@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отправка обращений — Алексей Чеголин</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, system-ui, sans-serif; background:#0a0a0b; color:#f5f5f4; padding:20px; line-height:1.5; }
+  h1 { font-size:22px; margin-bottom:6px; color:#C6F432; }
+  .sub { color:#8a8a8e; margin-bottom:8px; font-size:13px; }
+  .live { background:rgba(198,244,50,0.1); border:1px solid rgba(198,244,50,0.3); border-radius:8px; padding:10px 14px; margin-bottom:20px; font-size:13px; }
+  .live a { color:#C6F432; }
+  .card { background:#161618; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px; margin-bottom:14px; }
+  .card-title { font-weight:600; margin-bottom:4px; font-size:15px; }
+  .card-meta { color:#8a8a8e; font-size:12px; margin-bottom:8px; font-family:monospace; }
+  .card-preview { background:#0a0a0b; border-radius:8px; padding:12px; font-size:12px; color:#d4d4d2; white-space:pre-wrap; margin-bottom:12px; max-height:180px; overflow-y:auto; border:1px solid rgba(255,255,255,0.04); }
+  .btn { display:inline-block; background:#C6F432; color:#0a0a0b; text-decoration:none; padding:8px 16px; border-radius:8px; font-weight:600; font-size:13px; margin-right:8px; margin-bottom:6px; }
+  .btn:hover { opacity:0.85; }
+  .btn-sec { background:transparent; border:1px solid rgba(255,255,255,0.2); color:#f5f5f4; }
+  .tag { display:inline-block; background:rgba(198,244,50,0.1); color:#C6F432; font-size:10px; padding:2px 8px; border-radius:4px; font-family:monospace; text-transform:uppercase; }
+  .section-h { color:#C6F432; font-size:13px; font-family:monospace; text-transform:uppercase; letter-spacing:0.1em; margin:20px 0 10px; }
+</style>
+</head>
+<body>
+<h1>📨 Отправка обращений</h1>
+<p class="sub">Сайт уже LIVE. Каждая кнопка открывает письмо с заполненным текстом — жми «Отправить».</p>
+<div class="live">✅ Сайт задеплоен: <a href="https://chegolin123.github.io/targetologist/" target="_blank">chegolin123.github.io/targetologist</a></div>
+
+<div class="section-h">Холодный аутрич — 3 бизнеса</div>
+
+<div id="cards"></div>
+
+<div class="section-h">FL.ru — 5 заказов (нужен логин)</div>
+<div class="card" style="border-color:rgba(198,244,50,0.3);">
+  <div class="card-title">Отклики через сайт FL.ru</div>
+  <div class="card-meta">Требуется логин на fl.ru</div>
+  <div class="card-preview" style="white-space:normal;">Зайди на fl.ru → залогинься → откликнись на эти 5 заказов (шаблон в Obsidian):
+1. Квизы для дешёвых лидов — fl.ru/projects/5516498
+2. Директолог CAC 40к — fl.ru/projects/5516151
+3. VK + Директ на лид-магнит — fl.ru/projects/5515975
+4. Премиум детские праздники — fl.ru/projects/5515813
+5. Ремонт сайтов — fl.ru/projects/5515410</div>
+  <a class="btn" href="https://www.fl.ru/projects/category/reklama-marketing/yandex-direct/" target="_blank">Открыть FL.ru</a>
+</div>
+
+<script>
+const SITE = "https://chegolin123.github.io/targetologist/";
+const leads = [
+  {
+    name: "CleanOn — клининг Москва",
+    tag: "Холодный",
+    meta: "info@cleanon.ru · 8 (495) 132-32-31",
+    subject: "Нашёл точки слива бюджета в вашем Директе",
+    body: `Здравствуйте!
+
+Меня зовут Алексей, я таргетолог. Видел вашу рекламу в Яндекс.Директе по запросам «клининг Москва».
+
+За 15 минут бесплатного аудита покажу:
+— Какие ключи сливают бюджет без конверсий
+— Где можно снизить CPL на 20–40%
+— Какие креативы рискуют не пройти ФЗ-38
+
+Это бесплатно, без обязательств. Если найду проблему — обсудим работу.
+
+Сайт: ${SITE}
+Telegram: @NoWayWhile
+
+С уважением,
+Алексей Чеголин`,
+    email: "info@cleanon.ru",
+    extra: { label: "WhatsApp", href: "https://wa.me/74951323231" }
+  },
+  {
+    name: "eRemont — ремонт квартир Москва",
+    tag: "Холодный",
+    meta: "vira@eremont.ru · +7 (499) 444-88-20",
+    subject: "Прогноз лидов для eRemont — ремонт квартир",
+    body: `Здравствуйте!
+
+Меня зовут Алексей, я таргетолог. Специализируюсь на Директе и VK Рекламе для услуг с высоким чеком.
+
+Ремонт под ключ — средний чек 500 000+ ₽. При CPL 3000₽ один лид окупает месяц рекламы. Покажу:
+— Прогноз лидов по вашей нише
+— Какие ключи дают горячий трафик
+— Структуру кампании под B2C ремонт
+
+Бесплатный аудит вашей текущей рекламы — 15 минут.
+
+Сайт: ${SITE}
+Telegram: @NoWayWhile
+
+Алексей Чеголин`,
+    email: "vira@eremont.ru",
+    extra: { label: "WhatsApp", href: "https://wa.me/74953571488" }
+  },
+  {
+    name: "Ремэлит — ремонт квартир (есть ВК!)",
+    tag: "Холодный · VK",
+    meta: "remont@remelit.ru · +7 (903) 751-97-59 · vk.com/remelit_msk",
+    subject: "VK Реклама + Директ для Ремэлит",
+    body: `Здравствуйте!
+
+Видел ваше сообщество ВК (vk.com/remelit_msk) и сайт remelit.ru. Меня зовут Алексей — я таргетолог.
+
+Ремонт квартир — ниша с высоким чеком. Предлагаю:
+— Настроить VK Рекламу на подписчиков + Lookalike
+— Параллельно Яндекс.Директ на горячий поиск
+— Вести обе платформы, оптимизировать под CPL
+
+Бесплатный аудит — покажу, где теряете деньги.
+
+Telegram: @NoWayWhile
+Сайт: ${SITE}
+
+Алексей Чеголин`,
+    email: "remont@remelit.ru",
+    extra: { label: "Позвонить", href: "tel:+79037519759" }
+  }
+];
+
+const container = document.getElementById('cards');
+leads.forEach(lead => {
+  const mailto = `mailto:${lead.email}?subject=${encodeURIComponent(lead.subject)}&body=${encodeURIComponent(lead.body)}`;
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.innerHTML = `
+    <div class="card-title">${lead.name} <span class="tag">${lead.tag}</span></div>
+    <div class="card-meta">${lead.meta}</div>
+    <div class="card-preview">${lead.body}</div>
+    <a class="btn" href="${mailto}">📧 Открыть письмо</a>
+    <a class="btn btn-sec" href="${lead.extra.href}" target="_blank">${lead.extra.label}</a>
+  `;
+  container.appendChild(div);
+});
+</script>
+</body>
+</html>
