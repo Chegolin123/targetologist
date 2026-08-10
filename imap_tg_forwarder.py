@@ -9,10 +9,14 @@ import imaplib
 import email
 import json
 import os
+import socket
 import time
 import urllib.request
 from email.header import decode_header
 from datetime import datetime, timedelta
+
+# Global socket timeout — prevents infinite hangs on IMAP
+socket.setdefaulttimeout(30)
 
 IMAP_HOST = "imap.yandex.ru"
 IMAP_PORT = 993
@@ -87,7 +91,7 @@ def main():
             since_dt = datetime.now() - timedelta(days=3)
             since_str = since_dt.strftime("%d-%b-%Y")
 
-            m = imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT)
+            m = imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT, timeout=30)
             m.login(USER, PASSWORD)
             m.select("INBOX")
             status, data = m.search(None, "UNSEEN", "SINCE", since_str)
