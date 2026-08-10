@@ -35,7 +35,7 @@ export function ContactSection() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          secret: "LEAD_PROXY_SECRET_FROM_ENV",
+          secret: process.env.NEXT_PUBLIC_LEAD_PROXY_SECRET || "",
           name: form.name,
           contact: form.contact,
           message: form.message,

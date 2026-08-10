@@ -17,3 +17,17 @@ Thumbs.db
 # ZCode
 .zcode/
 .env.local
+
+# Local-only outreach/mailing utilities (contain sender credentials,
+# already ran, not part of the site). Keep local — never push.
+send_outreach*.py
+send_slow_retry.py
+send_wave6.py
+wave6_leads.py
+verify_emails.py
+tg_send.py
+hot_leads_responses.md
+build*.txt
+build-export.txt
+build-output.txt
+__pycache__/

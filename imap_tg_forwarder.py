@@ -20,11 +20,15 @@ socket.setdefaulttimeout(30)
 
 IMAP_HOST = "imap.yandex.ru"
 IMAP_PORT = 993
-USER = "chegol45@yandex.ru"
-PASSWORD = "IMAP_PASSWORD_FROM_ENV"
+USER = os.environ.get("IMAP_USER", "")
+PASSWORD = os.environ.get("IMAP_PASSWORD", "")
+if not USER or not PASSWORD:
+    raise SystemExit("IMAP_USER / IMAP_PASSWORD не заданы в окружении")
 
-TG_TOKEN = "TG_BOT_TOKEN_FROM_ENV"
-TG_CHAT_ID = "[CHAT_ID]"
+TG_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
+TG_CHAT_ID = os.environ.get("TG_CHAT_ID", "")
+if not TG_TOKEN or not TG_CHAT_ID:
+    raise SystemExit("TG_BOT_TOKEN / TG_CHAT_ID не заданы в окружении")
 TG_URL = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
 
 # Don't forward newsletters / system mail

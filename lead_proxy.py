@@ -8,16 +8,21 @@ Deployed on: VPS Netherlands (144.31.207.192) — has access to api.telegram.org
 from Russia-blocked environments.
 """
 import json
+import os
 import urllib.request
 import urllib.error
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
-BOT_TOKEN = "TG_BOT_TOKEN_FROM_ENV"
-CHAT_ID = "[CHAT_ID]"
+BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
+CHAT_ID = os.environ.get("TG_CHAT_ID", "")
+if not BOT_TOKEN or not CHAT_ID:
+    raise SystemExit("TG_BOT_TOKEN / TG_CHAT_ID не заданы в окружении")
 TELEGRAM_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 # Simple shared secret to prevent spam abuse
-SECRET = "LEAD_PROXY_SECRET_FROM_ENV"
+SECRET = os.environ.get("LEAD_PROXY_SECRET", "")
+if not SECRET:
+    raise SystemExit("LEAD_PROXY_SECRET не задан в окружении")
 
 class Handler(BaseHTTPRequestHandler):
     def _cors(self):
